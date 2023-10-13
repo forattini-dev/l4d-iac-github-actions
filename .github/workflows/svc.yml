@@ -312,22 +312,29 @@ jobs:
           echo "next version = $NEXT_VERSION"
           echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
 
-      # !!! <L4D AUTH> !!!
 
-      - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
+      # !!! <L4D AUTH> !!!
+      - id: 'GCP Auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
         with:
           project_id: l4d-e-fire
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
 
-      - run: gcloud --quiet auth configure-docker
+      - run: |-
+          gcloud info
+          gcloud config get-value project
+          gcloud --quiet auth configure-docker
 
-      - uses: google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
+      - uses: google-github-actions/get-gke-credentials@v1
         with:
           cluster_name: l4d-fire
           location: us-central1-c
-          credentials: ${{ secrets.GKE_SA_KEY }}
-
       # !!! </L4D AUTH> !!!
+
 
       # dependencies
       - name: Create k8s dependencies
