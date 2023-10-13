@@ -314,22 +314,24 @@ jobs:
 
 
       # !!! <L4D AUTH> !!!
-      - id: 'GCP Auth'
+      - name: 'GCP | Auth'
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: 'Set up Cloud SDK'
+      - name: 'GCP | Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         with:
           project_id: l4d-e-fire
 
-      - run: |-
+      - name: 'GCP | Set up Cloud SDK'
+        run: |-
           gcloud info
           gcloud config get-value project
           gcloud --quiet auth configure-docker
 
-      - uses: google-github-actions/get-gke-credentials@v1
+      - name: 'GCP | GKE credentials'
+        uses: google-github-actions/get-gke-credentials@v1
         with:
           cluster_name: l4d-fire
           location: us-central1-c
